@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { colors } from '../lib/colors';
 import { ProgressBar } from './ProgressBar';
@@ -16,16 +16,68 @@ const Card = ({
   imageUpload,
   error
 }) => {
+  const [algorithmSwitch, setAlgorithmSwitch] = useState(false);
+
+  const groupAnagrams = (anagrams) => {
+    const groups = {};
+    
+    // Group anagrams based on sorted characters
+    anagrams.forEach((anagram) => {
+      const sorted = anagram.split('').sort().join('');
+      console.log('building groups: ', sorted);
+      if (!groups[sorted]) {
+        groups[sorted] = [];
+      }
+      groups[sorted].push(anagram);
+    });
+    
+    // Convert object to array of arrays
+    const result = Object.values(groups);
+    
+    // Sort subarrays by length and alphabetically
+    result.forEach((subarray) => {
+      subarray.sort();
+    });
+    console.log('building result: ', result);
+    result.sort((a, b) => a.length - b.length);
+    
+    return result;
+  };
+
+  const AnagramGroups = () => {
+    const anagrams = ["affx", "a", "ab", "ba", "nnx", "xnn", "cde", "edc", "dce", "xffa"];
+    console.log('take this list of anagrams and outputs them in groups: ', anagrams);
+    const groups = groupAnagrams(anagrams);
+    
+    return (
+      <AnagramContainer>
+        {groups.map((group, index) => (
+          <div key={index}>
+            {group.map((anagram, index) => (
+              <span key={index}>{anagram} </span>
+            ))}
+          </div>
+        ))}
+      </AnagramContainer>
+    );
+  };
+
   return (
     <CardContainer data={dataExists ? "true" : "false"}>
       <CardHeader>
         <Heading>Receipt Analyzer</Heading>
       </CardHeader>
       <CardBody>
-        <CardText>
-          Upload a receipt to analyze it.
-        </CardText>
-        {!image && <Button image={imageExists ? "true" : "false"} type="button" onClick={() => handleImageUpload()}>Upload Receipt</Button>}
+        {algorithmSwitch ? (
+          <CardText>
+            Test Results in the Console.
+          </CardText>
+        ) : (
+          <CardText>
+            Upload a receipt to analyze it.
+          </CardText>
+        )}
+        {!image && !algorithmSwitch && <Button image={imageExists ? "true" : "false"} type="button" onClick={() => handleImageUpload()}>Upload Receipt</Button>}
         {!error && image && <Button image={imageExists ? "true" : "false"} type="button" onClick={() => handleClick()}>Analyze Receipt</Button>}
         {error && !dataExists && <Button error={error ? "true" : "false"} type="button">Try Again</Button>}
         {error && !dataExists && <Error>Error!</Error>}
@@ -43,7 +95,15 @@ const Card = ({
             <ReceiptImage src={image} alt="receipt" />
           </ImageContainer>
         )}
+        {algorithmSwitch && (
+          <AnagramGroups />
+        )}
       </CardBody>
+      {!algorithmSwitch ? (
+        <RunAlgorithm onClick={() => setAlgorithmSwitch(!algorithmSwitch)}>or click me to run the algorithm challenge</RunAlgorithm>
+      ) : (
+        <RunAlgorithm onClick={() => setAlgorithmSwitch(!algorithmSwitch)}>or click me to upload a receipt</RunAlgorithm>
+      )}
     </CardContainer>
   );
 };
@@ -141,6 +201,31 @@ const Error = styled.p`
   font-size: 14px;
   font-weight: 400;
   margin: 10px 0;
+`;
+
+const RunAlgorithm = styled.div`
+  width: 80%;
+  height: fit-content;
+  color: ${colors.black};
+  font-size: 12px;
+  font-weight: 400;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px 0px;
+`;
+
+const AnagramContainer = styled.div`
+  width: 80%;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
 `;
 
 export { Card };
