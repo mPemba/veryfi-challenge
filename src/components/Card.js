@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { colors } from '../lib/colors';
 import { ProgressBar } from './ProgressBar';
 import { Button } from './Button';
+import { AnagramGroups } from './AnagramGroups';
 
 const Card = ({
   dataExists, 
@@ -17,50 +18,6 @@ const Card = ({
   error
 }) => {
   const [algorithmSwitch, setAlgorithmSwitch] = useState(false);
-
-  const groupAnagrams = (anagrams) => {
-    const groups = {};
-    
-    // Group anagrams based on sorted characters
-    anagrams.forEach((anagram) => {
-      const sorted = anagram.split('').sort().join('');
-      console.log('building groups: ', sorted);
-      if (!groups[sorted]) {
-        groups[sorted] = [];
-      }
-      groups[sorted].push(anagram);
-    });
-    
-    // Convert object to array of arrays
-    const result = Object.values(groups);
-    
-    // Sort subarrays by length and alphabetically
-    result.forEach((subarray) => {
-      subarray.sort();
-    });
-    console.log('building result: ', result);
-    result.sort((a, b) => a.length - b.length);
-    
-    return result;
-  };
-
-  const AnagramGroups = () => {
-    const anagrams = ["affx", "a", "ab", "ba", "nnx", "xnn", "cde", "edc", "dce", "xffa"];
-    console.log('take this list of anagrams and outputs them in groups: ', anagrams);
-    const groups = groupAnagrams(anagrams);
-    
-    return (
-      <AnagramContainer>
-        {groups.map((group, index) => (
-          <div key={index}>
-            {group.map((anagram, index) => (
-              <span key={index}>{anagram} </span>
-            ))}
-          </div>
-        ))}
-      </AnagramContainer>
-    );
-  };
 
   return (
     <CardContainer data={dataExists ? "true" : "false"}>
@@ -79,8 +36,9 @@ const Card = ({
         )}
         {!image && !algorithmSwitch && <Button image={imageExists ? "true" : "false"} type="button" onClick={() => handleImageUpload()}>Upload Receipt</Button>}
         {!error && image && <Button image={imageExists ? "true" : "false"} type="button" onClick={() => handleClick()}>Analyze Receipt</Button>}
-        {error && !dataExists && <Button error={error ? "true" : "false"} type="button">Try Again</Button>}
+        {error && !dataExists && <Button error={error ? "true" : "false"} type="button" onClick={() => clear()}>Try Again</Button>}
         {error && !dataExists && <Error>Error!</Error>}
+        {!error && dataExists && <Success>Success!</Success>}
         {!error && image && <Clear onClick={() => clear()}>clear</Clear>}
         <HiddenInput
           ref={imageUpload}
@@ -102,7 +60,7 @@ const Card = ({
       {!algorithmSwitch ? (
         <RunAlgorithm onClick={() => setAlgorithmSwitch(!algorithmSwitch)}>or click me to run the algorithm challenge</RunAlgorithm>
       ) : (
-        <RunAlgorithm onClick={() => setAlgorithmSwitch(!algorithmSwitch)}>or click me to upload a receipt</RunAlgorithm>
+        <RunAlgorithm onClick={() => setAlgorithmSwitch(!algorithmSwitch)}>click me to go back to receipt upload</RunAlgorithm>
       )}
     </CardContainer>
   );
@@ -129,7 +87,7 @@ const CardContainer = styled.div`
   box-shadow: 0 0 10px 0 rgba(0,0,0,0.2);
   margin: 0;
 
-  @media (max-width: 1000px) {
+  @media (max-width: 1440px) {
     width: 80%;
   }
 `;
@@ -164,6 +122,7 @@ const HiddenInput = styled.input`
 
 const ImageContainer = styled.div`
   width: 60%;
+  max-width: 300px;
   height: auto;
   max-height: 300px;
   display: flex;
@@ -174,8 +133,10 @@ const ImageContainer = styled.div`
 
 const ReceiptImage = styled.img`
   width: 100%;
+  max-width: 300px;
   height: 100%;
-  object-fit: contain;
+  max-height: 300px;
+  object-fit: cover;
 `;
 
 const Clear = styled.div`
@@ -203,6 +164,13 @@ const Error = styled.p`
   margin: 10px 0;
 `;
 
+const Success = styled.p`
+  color: ${colors.green};
+  font-size: 14px;
+  font-weight: 400;
+  margin: 10px 0;
+`;
+
 const RunAlgorithm = styled.div`
   width: 80%;
   height: fit-content;
@@ -216,16 +184,6 @@ const RunAlgorithm = styled.div`
   justify-content: center;
   align-items: center;
   margin: 10px 0px;
-`;
-
-const AnagramContainer = styled.div`
-  width: 80%;
-  height: fit-content;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin: 0;
 `;
 
 export { Card };
