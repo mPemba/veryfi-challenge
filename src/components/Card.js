@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { colors } from '../lib/colors';
 import { ProgressBar } from './ProgressBar';
 import { Button } from './Button';
+import { AnagramGroups } from './AnagramGroups';
 
 const Card = ({
   dataExists, 
@@ -17,50 +18,6 @@ const Card = ({
   error
 }) => {
   const [algorithmSwitch, setAlgorithmSwitch] = useState(false);
-
-  const groupAnagrams = (anagrams) => {
-    const groups = {};
-    
-    // Group anagrams based on sorted characters
-    anagrams.forEach((anagram) => {
-      const sorted = anagram.split('').sort().join('');
-      console.log('building groups: ', sorted);
-      if (!groups[sorted]) {
-        groups[sorted] = [];
-      }
-      groups[sorted].push(anagram);
-    });
-    
-    // Convert object to array of arrays
-    const result = Object.values(groups);
-    
-    // Sort subarrays by length and alphabetically
-    result.forEach((subarray) => {
-      subarray.sort();
-    });
-    console.log('building result: ', result);
-    result.sort((a, b) => a.length - b.length);
-    
-    return result;
-  };
-
-  const AnagramGroups = () => {
-    const anagrams = ["affx", "a", "ab", "ba", "nnx", "xnn", "cde", "edc", "dce", "xffa"];
-    console.log('take this list of anagrams and outputs them in groups: ', anagrams);
-    const groups = groupAnagrams(anagrams);
-    
-    return (
-      <AnagramContainer>
-        {groups.map((group, index) => (
-          <div key={index}>
-            {group.map((anagram, index) => (
-              <span key={index}>{anagram} </span>
-            ))}
-          </div>
-        ))}
-      </AnagramContainer>
-    );
-  };
 
   return (
     <CardContainer data={dataExists ? "true" : "false"}>
@@ -103,7 +60,7 @@ const Card = ({
       {!algorithmSwitch ? (
         <RunAlgorithm onClick={() => setAlgorithmSwitch(!algorithmSwitch)}>or click me to run the algorithm challenge</RunAlgorithm>
       ) : (
-        <RunAlgorithm onClick={() => setAlgorithmSwitch(!algorithmSwitch)}>or click me to upload a receipt</RunAlgorithm>
+        <RunAlgorithm onClick={() => setAlgorithmSwitch(!algorithmSwitch)}>click me to go back to receipt upload</RunAlgorithm>
       )}
     </CardContainer>
   );
@@ -227,16 +184,6 @@ const RunAlgorithm = styled.div`
   justify-content: center;
   align-items: center;
   margin: 10px 0px;
-`;
-
-const AnagramContainer = styled.div`
-  width: 80%;
-  height: fit-content;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin: 0;
 `;
 
 export { Card };
