@@ -81,7 +81,7 @@ const Main = styled.div`
   align-items: ${props => props.imageExists ? 'flex-start' : 'center'};
   transition: justify-content 1000ms linear;
 
-  @media (max-width: 1000px) {
+  @media (max-width: 1440px) {
     flex-direction: column;
     align-items: center;
     height: fit-content;

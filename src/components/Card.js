@@ -79,8 +79,9 @@ const Card = ({
         )}
         {!image && !algorithmSwitch && <Button image={imageExists ? "true" : "false"} type="button" onClick={() => handleImageUpload()}>Upload Receipt</Button>}
         {!error && image && <Button image={imageExists ? "true" : "false"} type="button" onClick={() => handleClick()}>Analyze Receipt</Button>}
-        {error && !dataExists && <Button error={error ? "true" : "false"} type="button">Try Again</Button>}
+        {error && !dataExists && <Button error={error ? "true" : "false"} type="button" onClick={() => clear()}>Try Again</Button>}
         {error && !dataExists && <Error>Error!</Error>}
+        {!error && dataExists && <Success>Success!</Success>}
         {!error && image && <Clear onClick={() => clear()}>clear</Clear>}
         <HiddenInput
           ref={imageUpload}
@@ -129,7 +130,7 @@ const CardContainer = styled.div`
   box-shadow: 0 0 10px 0 rgba(0,0,0,0.2);
   margin: 0;
 
-  @media (max-width: 1000px) {
+  @media (max-width: 1440px) {
     width: 80%;
   }
 `;
@@ -164,6 +165,7 @@ const HiddenInput = styled.input`
 
 const ImageContainer = styled.div`
   width: 60%;
+  max-width: 300px;
   height: auto;
   max-height: 300px;
   display: flex;
@@ -174,8 +176,10 @@ const ImageContainer = styled.div`
 
 const ReceiptImage = styled.img`
   width: 100%;
+  max-width: 300px;
   height: 100%;
-  object-fit: contain;
+  max-height: 300px;
+  object-fit: cover;
 `;
 
 const Clear = styled.div`
@@ -198,6 +202,13 @@ const Clear = styled.div`
 
 const Error = styled.p`
   color: ${colors.red};
+  font-size: 14px;
+  font-weight: 400;
+  margin: 10px 0;
+`;
+
+const Success = styled.p`
+  color: ${colors.green};
   font-size: 14px;
   font-weight: 400;
   margin: 10px 0;

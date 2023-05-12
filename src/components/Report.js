@@ -37,7 +37,7 @@ const ReportContainer = styled.div`
   justify-content: center;
   align-items: center;
 
-  @media (max-width: 1000px) {
+  @media (max-width: 1440px) {
     width: 80%;
     margin: 50px 0px 0px 0px;
   }

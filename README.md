@@ -18,18 +18,19 @@ REACT_APP_API_KEY={Your API key}
 
 ## How to test
 
-In a terminal window start the node server
-### `cd node-server`
-### `npm install`
-### `npm start`
+In a terminal window start the node server.
+`cd node-server`
+`npm install`
+`npm start`
 
-In another terminal window start the app
-### `npm install`
-### `npm start`
+In another terminal window start the app from the root.
+`npm install`
+`npm start`
+
+> If `npm start` does not work (getting some node crypto errors). Try `npm start:legacy`. 
 
 ## Available scripts
 
-### `npm test`
+`npm test`
 
-### `npm run build`
-
+`npm run build`
